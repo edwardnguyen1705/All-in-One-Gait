@@ -30,17 +30,23 @@ The recognition results are represented by the color of the bounding boxes.
 ### B. Run on the host machine
 
 #### Step1. Installation
-```
+
+```bash
 git clone https://github.com/jdyjjj/All-in-One-Gait.git
 cd All-in-One-Gait
+```
+
+If you would like to use docker, please check `docker/README.md`.
+
+```bash
 conda create -n aiog python=3.8
 conda activate aiog
 pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
 # remove torch in requirements.txt
 pip install -r requirements.txt
 pip install numpy==1.20.0 pandas scikit-image
-pip install yolox
 ```
+
 #### Step2. Get checkpoints
 ```
 demo
