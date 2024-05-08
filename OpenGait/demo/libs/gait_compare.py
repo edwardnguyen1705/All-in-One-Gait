@@ -12,13 +12,13 @@ def computedistence(x, y, metric="euclidean"):
     if metric == "euclidean":
         distance = torch.sqrt(torch.sum(torch.square(x - y)))
     else:
-        xx = x.view(1, -1)
-        yy = y.view(1, -1)
+        xx = F.normalize(x.view(1, -1))
+        yy = F.normalize(y.view(1, -1))
         distance = F.cosine_similarity(xx, yy)
     
     return distance
 
-def compareid(data, dict, pid, threshold_value):
+def compareid(data, dict, pid, threshold_value, metric="euclidean"):
     probe_name = pid.split("-")[0]
     embs = getemb(data)
     min = threshold_value
@@ -31,7 +31,7 @@ def compareid(data, dict, pid, threshold_value):
             for type in subject:
                 for view in subject[type]:
                     value = subject[type][view]
-                    distance = computedistence(embs["embeddings"], value, metric="cosine")
+                    distance = computedistence(embs["embeddings"], value, metric=metric)
                     gid = key + "-" + str(type)
                     gid_distance = (gid, distance)
                     dic[gid] = distance
@@ -44,7 +44,7 @@ def compareid(data, dict, pid, threshold_value):
     return id, dic_sort
 
 
-def comparefeat(embs, gallery_feat: dict, pid, threshold_value):
+def comparefeat(embs, gallery_feat: dict, pid, threshold_value, metric="euclidean"):
     """Compares the distance between features
 
     Args:
@@ -68,7 +68,7 @@ def comparefeat(embs, gallery_feat: dict, pid, threshold_value):
             for type in subject:
                 for view in subject[type]:
                     value = subject[type][view]
-                    distance = computedistence(embs, value, metric="cosine")
+                    distance = computedistence(embs, value, metric=metric)
                     gid = key + "-" + str(type)
                     gid_distance = (gid, distance)
                     dic[gid] = distance
