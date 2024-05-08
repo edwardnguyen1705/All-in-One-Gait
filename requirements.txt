@@ -7,7 +7,6 @@ lap
 loguru
 motmetrics
 ninja
-numpy
 onnx
 onnx-simplifier
 onnxoptimizer
@@ -16,7 +15,6 @@ opencv-python<=4.6.0
 Pillow
 prettytable
 pyyaml >= 5.1
-scikit-image
 scikit-learn
 scipy
 tabulate
@@ -25,9 +23,3 @@ thop
 tqdm
 visualdl>=2.2.0
 paddlepaddle-gpu
-# torch>=1.10
-# #torchaudio==0.12.1
-# torchvision>=0.10.0
-torch==1.12.1
-torchaudio==0.12.1
-torchvision==0.13.1

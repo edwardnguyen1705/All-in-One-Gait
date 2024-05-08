@@ -1,11 +1,21 @@
+from __future__ import division, print_function, absolute_import
 import torch
+from torch.nn import functional as F
 import numpy as np
+
 
 def getemb(data):
     return data["inference_feat"]
 
-def computedistence(x, y):
-    distance = torch.sqrt(torch.sum(torch.square(x - y)))
+def computedistence(x, y, metric="euclidean"):
+    distance = None
+    if metric == "euclidean":
+        distance = torch.sqrt(torch.sum(torch.square(x - y)))
+    else:
+        xx = x.view(1, -1)
+        yy = y.view(1, -1)
+        distance = F.cosine_similarity(xx, yy)
+    
     return distance
 
 def compareid(data, dict, pid, threshold_value):
@@ -21,7 +31,7 @@ def compareid(data, dict, pid, threshold_value):
             for type in subject:
                 for view in subject[type]:
                     value = subject[type][view]
-                    distance = computedistence(embs["embeddings"],value)
+                    distance = computedistence(embs["embeddings"], value, metric="cosine")
                     gid = key + "-" + str(type)
                     gid_distance = (gid, distance)
                     dic[gid] = distance
@@ -46,6 +56,7 @@ def comparefeat(embs, gallery_feat: dict, pid, threshold_value):
         id (str): The id in gallery
         dic_sort (dict): Recognition result sorting dictionary
     """
+    print(f"probe_pid: {pid}")
     probe_name = pid.split("-")[0]
     min = threshold_value
     id = None
@@ -57,10 +68,11 @@ def comparefeat(embs, gallery_feat: dict, pid, threshold_value):
             for type in subject:
                 for view in subject[type]:
                     value = subject[type][view]
-                    distance = computedistence(embs, value)
+                    distance = computedistence(embs, value, metric="cosine")
                     gid = key + "-" + str(type)
                     gid_distance = (gid, distance)
                     dic[gid] = distance
+                    print(f"key: {key}, g_pid: {type}, distance: {(distance.float(), 3)}")
                     if distance.float() < min:
                         id = gid
                         min = distance.float()

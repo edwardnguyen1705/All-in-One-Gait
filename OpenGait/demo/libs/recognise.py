@@ -69,6 +69,7 @@ def gaitfeat_compare(probe_feat:dict, gallery_feat:dict):
     Returns:
         pg_dicts (dict): The id of probe corresponds to the id of gallery
     """
+    threshold_value = 0.5
     item = list(probe_feat.keys())
     probe = item[0]
     pg_dict = {}
@@ -76,7 +77,7 @@ def gaitfeat_compare(probe_feat:dict, gallery_feat:dict):
     for inputs in probe_feat[probe]:
         number = list(inputs.keys())[0]
         probeid = probe + "-" + number
-        galleryid, idsdict = gc.comparefeat(inputs[number]['undefined'], gallery_feat, probeid, 100)
+        galleryid, idsdict = gc.comparefeat(inputs[number]['undefined'], gallery_feat, probeid, threshold_value)
         pg_dict[probeid] = galleryid
         pg_dicts[probeid] = idsdict
     # print("=================== pg_dicts ===================")

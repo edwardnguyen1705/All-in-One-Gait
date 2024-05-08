@@ -155,6 +155,8 @@ def writeresult(pgdict, video_path, video_save_folder):
         video_path (Path): Path of input video
         video_save_folder (Path): Tracking video storage root path after processing
     """
+    if pgdict is None: return
+    
     device = torch.device("cuda" if track_cfgs["device"] == "gpu" else "cpu")
     trt_file = None
     decoder = None
@@ -167,6 +169,7 @@ def writeresult(pgdict, video_path, video_save_folder):
     os.makedirs(video_save_folder, exist_ok=True)
     video_name = video_path.split("/")[-1]
     first_key = next(iter(pgdict))
+    if pgdict[first_key] is None: return 
     gallery_name = pgdict[first_key].split("-")[0]
     probe_name = video_name
     # save_video_path = save_video_name.split(".")[0]+ "-After.mp4"
